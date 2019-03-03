@@ -1,0 +1,16 @@
+.delete-icon{
+    visibility: hidden;
+    cursor: pointer;
+}
+
+.delete-icon i{
+    font-size: 150%;
+}
+
+.delete-icon i:hover{
+    color: red;
+}
+
+.parent:hover .delete-icon{
+    visibility: visible;
+}

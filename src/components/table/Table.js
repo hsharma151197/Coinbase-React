@@ -1,18 +1,22 @@
 import React from 'react';
-import axios from "axios";
-import Spinner from "../Spinner/Spinner";
+import axios from 'axios';
+
+import Spinner from '../Spinner/Spinner';
+import './Table.css';
+
 const API_KEY = 'fef8641a9d1b839853d2cdc56cd95080af955a312a5bb109fd73e97d96def896';
 
 var newArr = [];
 
 class Table extends React.Component{
-    state={
-        data:null
+    state = {
+        data : null
     }
     getData=()=>{
         axios.get(`https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=INR&CMC_PRO_API_KEY=${API_KEY}`).then((response)=>{
+            
             let dataArr = response.data.Data;
-            console.log(dataArr[0]['CoinInfo']['FullName']);
+
             newArr = dataArr.map(function(current, index){
                 return {
                     id: current['CoinInfo']['Id'],
@@ -30,14 +34,14 @@ class Table extends React.Component{
     componentDidMount(){
         this.getData();
     }
-   deleteHandler=(event,id)=>{
+
+    deleteHandler=(event,id)=>{
         let filteredArray=this.state.data.filter((item)=>item.id!==id);
-        console.log(event);
         //event.target.parentNode.remove();
         this.setState({data:filteredArray})
-   }
+    }
+
     render(){
-        console.log(newArr);
         return(
             <div className="container">
 
@@ -45,25 +49,23 @@ class Table extends React.Component{
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Change</th>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Change</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
                         {this.state.data.map((item,index)=>{
-                            console.log(item);
-                            return (<tr key={item.id}><td>{item.id}</td>
+                            return (<tr className="parent" key={item.id}><th scope="row">{item.id}</th>
                             <td>{item.name}</td>
-                            <td>&#8377; {item.price}</td>
-                            <td>{item.change}</td>
-                            <td onClick={(event)=>this.deleteHandler(event,item.id)} style={{cursor:"pointer"}}><img style={{width:"25px",height:"25px"}} src="https://image.flaticon.com/icons/svg/61/61848.svg" alt="delete"/></td>
+                            <td>&#8377; {Number(item.price).toFixed(2)}</td>
+                            <td>&#8377; {Number(item.change).toFixed(2)}</td>
+                            <td className="delete-icon" onClick={(event)=>this.deleteHandler(event,item.id)}><i className="fas fa-trash-alt"></i></td>
                             </tr>)
                         })}
                     </tbody>
-                </table>:<Spinner/>}
+                </table>: <Spinner />}
             </div>
         );          
     }
